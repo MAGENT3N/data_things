@@ -4,7 +4,7 @@ Data cleaning, analysis and machine learning on real datasets.
 
 ---
 
-## Projects
+## File names
 
 | File | Topic | Description |
 |------|-------|-------------|
