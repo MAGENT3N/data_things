@@ -65,8 +65,8 @@ def main():
     # print(results)
     # print(create_groups())
     group_dict = create_groups()
-    simulate_group(group_dict)
-        
+    results = simulate_group(group_dict,"group_a")
+    print(results)
 """
     Description- Function for simulating a match between two teams on the basis
     of their elo ratings. We use the basic formula for calculating the probability
@@ -112,50 +112,59 @@ def simulate_match(team_a , team_b):
                 
     
     # Game result logic
+    results =[]
     random_num = round(random.random(),4)
     if 0 <= random_num <= prob_of_team_a:
         win = team_a
-        return win
+        results.append(win)
     elif prob_of_team_a <= random_num <= prob_of_team_a + prob_of_draw:
         draw = "draw"
-        return draw
+        results.append(draw)
     elif prob_of_team_a + prob_of_draw <= random_num < 1:
         loss = team_b
-        return loss
+        results.append(loss)
+    return results
 
 def create_groups():
     groups_dictionary = {
-        "group_a" : {"mexico" , "south_africa" ,"korea", "czechia"},
-        "group_b" : {"canada" ,"bosnia" ," qatar","switzerland"},
-        "group_c" : {"brazil","morocco","haiti","scotland"},
-        "group_d" : {"usa","paraguay","australia","turkey"},
-        "group_e" : {"germany","curacao","ivory_coast","ecudaor"},
-        "group_f" : {"netherlands","japan","netherlands","tunisia"},
-        "group_g" : {"belgium","egypt","iran","newzealand"},
-        "group_h" : {"spain","caboverde","saudi","uruguay"},
-        "group_i" : {"france","senegal","iraq","norway"},
-        "group_j" : {"argentina","algeria","jordan","austria"},
-        "group_k" : {"portugal","congo_dr","uzbekistan","colombia"},
-        "group_l" : {"england","croatia","ghana","panama"}
+        "group_a" : ["mexico" , "south_africa" ,"korea", "czechia"],
+        "group_b" : ["canada" ,"bosnia" ," qatar","switzerland"],
+        "group_c" : ["brazil","morocco","haiti","scotland"],
+        "group_d" : ["usa","paraguay","australia","turkey"],
+        "group_e" : ["germany","curacao","ivory_coast","ecudaor"],
+        "group_f" : ["netherlands","japan","netherlands","tunisia"],
+        "group_g" : ["belgium","egypt","iran","newzealand"],
+        "group_h" : ["spain","caboverde","saudi","uruguay"],
+        "group_i" : ["france","senegal","iraq","norway"],
+        "group_j" : ["argentina","algeria","jordan","austria"],
+        "group_k" : ["portugal","congo_dr","uzbekistan","colombia"],
+        "group_l" : ["england","croatia","ghana","panama"]
         }
     return groups_dictionary   
 
-def simulate_group(groups_dictionary):
-    # Creating a list of all the groups
-    group_list = []
-    for key in groups_dictionary:
-        group_name = groups_dictionary[key]
-        group_list.append(group_name)
-    #print(group_list)
-    # Finding all the pairs of matches that will be playes in a group
-    
+def simulate_group(groups_dictionary , group_key):
+
+    countries = groups_dictionary[group_key]
     pairs = []
-    for i in range(len(group_list)):
-        for j in range(i + 1 ,len(group_list)):
-            if i != j :
-                pair = (group_list[i],group_list[j])
+    for i in range(len(countries)):
+        # condition for removing double counting plus playing the team
+        #... againts itself
+        for j in range(i + 1 , len(countries)):
+            if i != j:
+                pair = (countries[i],countries[j])
                 pairs.append(pair)
-    print(pairs)
+    # simulating matches
+    results = []
+    for i in range(len(pairs)):
+        element_at_i = pairs[i]
+        # unpacking the tuple
+        country1,country2 = element_at_i
+        result = simulate_match(country1,country2)
+        results.append(result)
+    return results
+        
+            
+    
                 
         
     
