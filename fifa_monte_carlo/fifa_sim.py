@@ -112,18 +112,16 @@ def simulate_match(team_a , team_b):
                 
     
     # Game result logic
-    results =[]
     random_num = round(random.random(),4)
     if 0 <= random_num <= prob_of_team_a:
         win = team_a
-        results.append(win)
+        return win
     elif prob_of_team_a <= random_num <= prob_of_team_a + prob_of_draw:
         draw = "draw"
-        results.append(draw)
+        return draw
     elif prob_of_team_a + prob_of_draw <= random_num < 1:
         loss = team_b
-        results.append(loss)
-    return results
+        return loss
 
 def create_groups():
     groups_dictionary = {
