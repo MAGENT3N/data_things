@@ -26,7 +26,7 @@ elo_ratings_dict = {
         "ivory_coast" : {"elo" : 1676 , "one_year_change": 85},
         "croatia"   : {"elo" :1930 , "one_year_change": 19},
         "curacao": {"elo" : 1433 , "one_year_change" : 110},
-        "cezchia" : {"elo" : 1733 , "one_year_change" : -22},
+        "czechia" : {"elo" : 1733 , "one_year_change" : -22},
         "ecuador" : {"elo": 1953  , "one_year_change" : 24},
         "egypt"   : {"elo" : 1699 , "one_year_change" : 33},
         "england" : {"elo" : 2020 , "one_year_change" : 9},
@@ -82,11 +82,15 @@ def main():
     Returns - The name of the team that wins or if a draw then draw
 """
 def simulate_match(team_a , team_b):
+    """
+    TO D0 - Use change in the one year elo rating to arrive at a better
+    match outcome
+    """
     ## Checking logic with two teams
     elo_rating_team_a = elo_ratings_dict[team_a]["elo"]
     elo_rating_team_b  = elo_ratings_dict[team_b]["elo"]
-    one_year_team_a = elo_ratings_dict[team_a]["one_year_change"]
-    one_year_team_b = elo_ratings_dict[team_b]["one_year_change"]
+    # one_year_team_a = elo_ratings_dict[team_a]["one_year_change"]
+    # one_year_team_b = elo_ratings_dict[team_b]["one_year_change"]
     # Match logic based on elo ratings and one year change
     random_num = 0
     # Probability of germany winning based on their elo ratings
@@ -105,7 +109,7 @@ def simulate_match(team_a , team_b):
     print(prob_of_draw)
                 
     
-    
+    # Game result logic
     random_num = round(random.random(),4)
     if 0 <= random_num <= prob_of_team_a:
         win = team_a
@@ -116,7 +120,24 @@ def simulate_match(team_a , team_b):
     elif prob_of_team_a + prob_of_draw <= random_num < 1:
         loss = team_b
         return loss
-
+"""
+    Function for creating the groups
+"""
+def create_groups():
+    groups_dictionary = {
+        "group_a" : {"mexico" , "south_africa" ,"korea", "czechia"},
+        "group_b" : {"canada" ,"bosnia" ," qatar","switzerland"},
+        "group_c" : {"brazil","morocco","haiti","scotland"},
+        "group_d" : {"usa","paraguay","australia","turkey"},
+        "group_e" : {"germany","curacao","ivory_coast","ecudaor"},
+        "group_f" : {"netherlands","japan","netherlands","tunisia"},
+        "group_g" : {"belgium","egypt","iran","newzealand"},
+        "group_h" : {"spain","caboverde","saudi","uruguay"},
+        "group_i" : {"france","senegal","iraq","norway"},
+        "group_j" : {"argentina","algeria","jordan","austria"},
+        "group_k" : {"portugal","congo_dr","uzbekistan","colombia"},
+        "group_l" : {"england","croatia","ghana","panama"}
+        }
         
  
     
