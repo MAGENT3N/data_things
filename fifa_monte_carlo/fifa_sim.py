@@ -95,9 +95,9 @@ def simulate_match(team_a , team_b):
     elo_rating_team_b = base_elo_b + (elo_ratings_dict[team_b]["one_year_change"] * 0.5)
     # Match logic based on elo ratings and one year change
     random_num = 0
-    # Probability of germany winning based on their elo ratings
+    # Probability of team_a winning based on their elo ratings
     prob_of_team_a =round( 1/(1 + (10**((elo_rating_team_b - elo_rating_team_a)/400) )),4)
-    # Probability of france winning based on their elo ratings
+    # Probability of team_b winning based on their elo ratings
     prob_of_team_b = round(1/(1 + (10**((elo_rating_team_a - elo_rating_team_b)/400) )),4)
     # Calculating the draw probability based on the difference in the elo ratings of the teams
     elo_diff = abs(elo_rating_team_a - elo_rating_team_b)
