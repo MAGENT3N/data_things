@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jun  1 10:31:25 2026
 
-@author: arjun and yash
-"""
 import random
 import math
 
@@ -63,11 +58,14 @@ def main():
     
     # one_year_elo = accessing_one_year_change()
     # print(one_year_elo)
-    results = []
-    for i in range(10):
-        result = simulate_match("curacao", "argentina")
-        results.append(result)
-    print(results)
+    # results = []
+    # for i in range(10):
+    #     result = simulate_match("curacao", "argentina")
+    #     results.append(result)
+    # print(results)
+    # print(create_groups())
+    group_dict = create_groups()
+    simulate_group(group_dict)
         
 """
     Description- Function for simulating a match between two teams on the basis
@@ -81,16 +79,20 @@ def main():
     
     Returns - The name of the team that wins or if a draw then draw
 """
+"""
+"""
 def simulate_match(team_a , team_b):
-    """
-    TO D0 - Use change in the one year elo rating to arrive at a better
-    match outcome
-    """
+
+
+
     ## Checking logic with two teams
-    elo_rating_team_a = elo_ratings_dict[team_a]["elo"]
-    elo_rating_team_b  = elo_ratings_dict[team_b]["elo"]
-    # one_year_team_a = elo_ratings_dict[team_a]["one_year_change"]
-    # one_year_team_b = elo_ratings_dict[team_b]["one_year_change"]
+    base_elo_a = elo_ratings_dict[team_a]["elo"]
+    base_elo_b = elo_ratings_dict[team_b]["elo"]
+    
+    # Form integration: We treat 50% of the one-year change as a "momentum modifier" 
+    # to find a middle ground between long-term skill and current hot/cold streaks.
+    elo_rating_team_a = base_elo_a + (elo_ratings_dict[team_a]["one_year_change"] * 0.5)
+    elo_rating_team_b = base_elo_b + (elo_ratings_dict[team_b]["one_year_change"] * 0.5)
     # Match logic based on elo ratings and one year change
     random_num = 0
     # Probability of germany winning based on their elo ratings
@@ -120,9 +122,7 @@ def simulate_match(team_a , team_b):
     elif prob_of_team_a + prob_of_draw <= random_num < 1:
         loss = team_b
         return loss
-"""
-    Function for creating the groups
-"""
+
 def create_groups():
     groups_dictionary = {
         "group_a" : {"mexico" , "south_africa" ,"korea", "czechia"},
@@ -138,7 +138,27 @@ def create_groups():
         "group_k" : {"portugal","congo_dr","uzbekistan","colombia"},
         "group_l" : {"england","croatia","ghana","panama"}
         }
+    return groups_dictionary   
+
+def simulate_group(groups_dictionary):
+    # Creating a list of all the groups
+    group_list = []
+    for key in groups_dictionary:
+        group_name = groups_dictionary[key]
+        group_list.append(group_name)
+    #print(group_list)
+    # Finding all the pairs of matches that will be playes in a group
+    
+    pairs = []
+    for i in range(len(group_list)):
+        for j in range(i + 1 ,len(group_list)):
+            if i != j :
+                pair = (group_list[i],group_list[j])
+                pairs.append(pair)
+    print(pairs)
+                
         
+    
  
     
     
