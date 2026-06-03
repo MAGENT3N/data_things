@@ -65,8 +65,8 @@ def main():
     # print(results)
     # print(create_groups())
     group_dict = create_groups()
-    results = simulate_group(group_dict,"group_a")
-    print(results)
+    results,points = simulate_group(group_dict,"group_a")
+    print(results,points)
 """
     Description- Function for simulating a match between two teams on the basis
     of their elo ratings. We use the basic formula for calculating the probability
@@ -108,7 +108,6 @@ def simulate_match(team_a , team_b):
     scale = 1 - prob_of_draw
     prob_of_team_b = round(prob_of_team_b * scale , 4)
     prob_of_team_a = round(prob_of_team_a * scale , 4)
-    print(prob_of_draw)
                 
     
     # Game result logic
@@ -141,8 +140,19 @@ def create_groups():
     return groups_dictionary   
 
 def simulate_group(groups_dictionary , group_key):
-
+    """
+        Creating a dictionary for tracking the points
+    """
     countries = groups_dictionary[group_key]
+    points_dict = {}
+    for i in range(len(countries)):
+        country = countries[i]
+        points_dict[country] = 0
+    
+    """
+        Creating a list for all the matches that will be played
+        within a group
+    """
     pairs = []
     for i in range(len(countries)):
         # condition for removing double counting plus playing the team
@@ -152,14 +162,24 @@ def simulate_group(groups_dictionary , group_key):
                 pair = (countries[i],countries[j])
                 pairs.append(pair)
     # simulating matches
+    """
+        Simulating all the matches within the group
+    """
     results = []
     for i in range(len(pairs)):
         element_at_i = pairs[i]
         # unpacking the tuple
         country1,country2 = element_at_i
         result = simulate_match(country1,country2)
+        """
+            Check the return lines of simulate_match for reference
+        """
+        if result == country1:
+            points_dict[country1] += 3
+        elif result == country2 :
+            points_dict[country2] += 3   
         results.append(result)
-    return results
+    return results,points_dict
         
             
     
