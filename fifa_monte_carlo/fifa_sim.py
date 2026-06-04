@@ -34,7 +34,7 @@ elo_ratings_dict = {
         "japan"    :{"elo": 1906 , "one_year_change" : -30},
         "jordan"   :{"elo": 1685 , "one_year_change" : 66},
         "korea"   :{"elo": 1756 , "one_year_change" : 10},
-        "morroco"    :{"elo": 1822 , "one_year_change" : 16},
+        "morocco"    :{"elo": 1822 , "one_year_change" : 16},
         "netherlands" :{"elo": 1961 , "one_year_change" : -5},
         "newzealand"  :{"elo": 1585 , "one_year_change" : -10},
         "norway"   :{"elo": 1912, "one_year_change" : 83},
@@ -66,7 +66,9 @@ def main():
     # print(create_groups())
     group_dict = create_groups()
     qual_teams = simulate_group(group_dict,"group_a")
-    print(qual_teams)
+    round_of_32()
+
+
 """
     Description- Function for simulating a match between two teams on the basis
     of their elo ratings. We use the basic formula for calculating the probability
@@ -125,10 +127,10 @@ def simulate_match(team_a , team_b):
 def create_groups():
     groups_dictionary = {
         "group_a" : ["mexico" , "south_africa" ,"korea", "czechia"],
-        "group_b" : ["canada" ,"bosnia" ," qatar","switzerland"],
+        "group_b" : ["canada" ,"bosnia" ,"qatar","switzerland"],
         "group_c" : ["brazil","morocco","haiti","scotland"],
         "group_d" : ["usa","paraguay","australia","turkey"],
-        "group_e" : ["germany","curacao","ivory_coast","ecudaor"],
+        "group_e" : ["germany","curacao","ivory_coast","ecuador"],
         "group_f" : ["netherlands","japan","netherlands","tunisia"],
         "group_g" : ["belgium","egypt","iran","newzealand"],
         "group_h" : ["spain","caboverde","saudi","uruguay"],
@@ -142,7 +144,9 @@ def create_groups():
     Function for simulating the outcomes of a group playoff
     Parameter: The groups_dictionary and the group_key,ie,the group
     which we want to simulate
-    Returns: A list containing the top two teams of the group
+    Returns: Returns the list of the teams of the group after the play
+    against each other sorted in a descending order on the basis of their
+    points AND the a dictionary containing the team with their points
 """
 def simulate_group(groups_dictionary , group_key):
     """
@@ -191,10 +195,34 @@ def simulate_group(groups_dictionary , group_key):
     sorted_point_dicts = dict(sorted(points_dict.items(),key = lambda item:item[1],reverse=True))
     # Getting the list of the teams and selecting the first and second element
     team_list = list(sorted_point_dicts)
-    team_qualifying = [team_list[0],team_list[1]]
-    return team_qualifying
+    return team_list,points_dict
+"""
+    Function for creating playoffs against the winners of the group stage
+"""
+def round_of_32():
+    group = create_groups()
+    top_24 = [] 
+    # Dictionary containing the 12 teams who were third in their group
+    
+    bottom_fraggers = {}
+    
+    for key in group:
+        elem,points = simulate_group(group, key)
+        top_24.append(elem[0])
+        top_24.append(elem[1])
+        bottom_fraggers[elem[2]] = points[elem[2]]
+    sorted_bottom_fraggers = dict(sorted(bottom_fraggers.items(),key = lambda item:item[1],reverse = True))
+    sorted_list = list(sorted_bottom_fraggers)
+    top_8 = []
+    for i in range(8):
+        element = sorted_list[i]
+        top_8.append(element)
+    print(top_8)
         
+        
+
             
+    # print(teams)
     
                 
         
