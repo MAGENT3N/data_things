@@ -65,8 +65,8 @@ def main():
     # print(results)
     # print(create_groups())
     group_dict = create_groups()
-    results,points = simulate_group(group_dict,"group_a")
-    print(results,points)
+    qual_teams = simulate_group(group_dict,"group_a")
+    print(qual_teams)
 """
     Description- Function for simulating a match between two teams on the basis
     of their elo ratings. We use the basic formula for calculating the probability
@@ -138,7 +138,12 @@ def create_groups():
         "group_l" : ["england","croatia","ghana","panama"]
         }
     return groups_dictionary   
-
+"""
+    Function for simulating the outcomes of a group playoff
+    Parameter: The groups_dictionary and the group_key,ie,the group
+    which we want to simulate
+    Returns: A list containing the top two teams of the group
+"""
 def simulate_group(groups_dictionary , group_key):
     """
         Creating a dictionary for tracking the points
@@ -178,8 +183,16 @@ def simulate_group(groups_dictionary , group_key):
             points_dict[country1] += 3
         elif result == country2 :
             points_dict[country2] += 3   
-        results.append(result)
-    return results,points_dict
+            results.append(result)
+        elif result == "draw":
+            points_dict[country1] += 1
+            points_dict[country2] += 1
+    # Sorting point_dict to get the top two teams from the group(in descending order)
+    sorted_point_dicts = dict(sorted(points_dict.items(),key = lambda item:item[1],reverse=True))
+    # Getting the list of the teams and selecting the first and second element
+    team_list = list(sorted_point_dicts)
+    team_qualifying = [team_list[0],team_list[1]]
+    return team_qualifying
         
             
     
