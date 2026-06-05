@@ -1,6 +1,7 @@
 
 import random
 import math
+import matplotlib.pyplot as plt
 
 # Global variable containing the country,elo , and year change in elo
 # .... as a dictionary data structure
@@ -57,7 +58,7 @@ elo_ratings_dict = {
 
 """
     Main description : The program uses the global dictionary which contains
-    the data on which are simulation runs.
+    the data on which the  simulations  run.
     
     Basic Flow of the program:
     1)Create a dictionary containing the groups
@@ -65,23 +66,18 @@ elo_ratings_dict = {
     
 """
 def main():
-    
-    # one_year_elo = accessing_one_year_change()
-    # print(one_year_elo)
-    # results = []
-    # for i in range(10):
-    #     result = simulate_match("curacao", "argentina")
-    #     results.append(result)
-    # print(results)
-    # print(create_groups())
-    group_dict = create_groups()
-    qual_teams,points = simulate_group(group_dict,"group_a")
-    print(round_of_32())
-    print(round_of_16())
-    print(quarter_finals())
-    print(semi_finals())
-    print(finals())
-
+    iterations = int(input("Enter the number of iterations for the simulation: "))
+    result_tracker = result_dictionary()
+    for i in range(iterations):
+        winner = simulate_tournament()
+        # Dictionary expects a string not a list so winner[0]
+        result_tracker[winner[0]] += 1
+    # changing the values to the probability of winning the tournament
+    result_tracker = {k:v/iterations for k,v in result_tracker.items()}
+    sorted_dict = dict(sorted(result_tracker.items() , key=lambda item:item[1],reverse = True))
+    for key,value in sorted_dict.items():
+        print(f"{key}: win probability after {iterations} iterations = {value}")
+    plot_data(sorted_dict)
 
 """
     Description- Function for simulating a match between two teams on the basis
@@ -133,7 +129,7 @@ def simulate_match(team_a , team_b):
     elif prob_of_team_a <= random_num <= prob_of_team_a + prob_of_draw:
         draw = "draw"
         return draw
-    elif prob_of_team_a + prob_of_draw <= random_num < 1:
+    elif prob_of_team_a + prob_of_draw <= random_num <= 1:
         loss = team_b
         return loss
 
@@ -144,7 +140,7 @@ def create_groups():
         "group_c" : ["brazil","morocco","haiti","scotland"],
         "group_d" : ["usa","paraguay","australia","turkey"],
         "group_e" : ["germany","curacao","ivory_coast","ecuador"],
-        "group_f" : ["netherlands","japan","netherlands","tunisia"],
+        "group_f" : ["netherlands","japan","sweden","tunisia"],
         "group_g" : ["belgium","egypt","iran","newzealand"],
         "group_h" : ["spain","caboverde","saudi","uruguay"],
         "group_i" : ["france","senegal","iraq","norway"],
@@ -210,10 +206,20 @@ def simulate_group(groups_dictionary , group_key):
     team_list = list(sorted_point_dicts)
     return team_list,points_dict
 """
-    Function for creating playoffs against the winners of the group stage and
-    returning the teams which pass two the round of 16
+    Function for assembling the teams in the round of 32
+    Description:
+    1)We create the groups by calling the create_groups function.
+    2)We add the top two teams of each group to the list of top 24 teams
+    3)We create an empty dictionary for storing the values of the bottom
+      two teams of each group along with their points
+    4)We sort the dictionary containing all the bottom two teams along with
+      their points and get the top 8 teams from them.
+    5)We add the two lists to get the teams entering the round of 32
+    
+    Parameters: None
+    Returns : A list of teams entering the round of 32
 """
-def round_of_32():
+def assemble_round_32_teams():
     group = create_groups()
     top_24 = [] 
     # Dictionary containing the 12 teams who were third in their group
@@ -236,36 +242,41 @@ def round_of_32():
         element = sorted_list[i]
         top_8.append(element)
     teams_in_round_32 = top_24 + top_8
+    return teams_in_round_32
+    
+"""
+    Function for creating playoffs against the winners of the group stage and
+    returning the teams which pass two the round of 16
+"""
+def round_of_32():
+
+    teams_in_round_32 = assemble_round_32_teams()
     teams_in_16 = knockout(teams_in_round_32)
     return teams_in_16
 """
     Function for simulating the round of 16
 """
-def round_of_16():
+def round_of_16(teams_in_16):
     # Getting the teams playing the round of 16
-    teams_in_16 = round_of_32()
     quarter_final_teams = knockout(teams_in_16)
     return quarter_final_teams
 
 """
     Function for simulating the quarter finals
 """
-def quarter_finals():
-    teams_in_quarters = round_of_16()
+def quarter_finals(teams_in_quarters):
     semi_finals_teams = knockout(teams_in_quarters)
     return semi_finals_teams
 """
     Function for simulating the semi-finals
 """
-def semi_finals():
-    teams_in_semi = quarter_finals()
+def semi_finals(teams_in_semi):
     teams_in_finals = knockout(teams_in_semi)
     return teams_in_finals
 """
     Function for simulating the finals
 """
-def finals():
-    final_teams = semi_finals()
+def finals(final_teams):
     winner = knockout(final_teams)
     return winner
     
@@ -301,8 +312,45 @@ def knockout(list_of_teams):
                 result = team_b
         next_round_teams.append(result)
     return next_round_teams
-
-
+"""
+    Function for simulating the tournament by combining our functions
+"""
+def simulate_tournament():
+    teams_in_16 = round_of_32()
+    teams_in_quarters = round_of_16(teams_in_16)
+    teams_in_semis = quarter_finals(teams_in_quarters)
+    teams_in_finals = semi_finals(teams_in_semis)
+    winner = finals(teams_in_finals)
+    return winner
+"""
+    Function for creating a result dictionary which tracks the number
+    of wins of a country for the total number of iterations for which we
+    run the simulation
+"""
+def result_dictionary():
+    result_dict = {key: 0 for key in elo_ratings_dict}
+    return result_dict
+"""
+    Function for plotting historgram of win probabilities of the top 10
+    teams
+    Paramter : We will give to it the sorted result dictionary
+    Output : Plots the histogram of the win probabilities of the 15 teams?
+"""
+def plot_data(sorted_result_dictionary):
+    # get the probabilites of the top 10 arrays
+    top_10_teams = list(sorted_result_dictionary.keys())[:10]
+    top_10_probs = list(sorted_result_dictionary.values())[:10]
+    plt.figure()
+    plt.bar(top_10_teams,top_10_probs,color = 'red')
+    plt.title('Probability of the teams winning ')
+    plt.xlabel('Name of the teams')
+    plt.ylabel('Probability of winning')
+    plt.show()
+    
+               
+            
+        
+    
 if __name__=="__main__":
     main()
     
