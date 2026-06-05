@@ -1,2 +1,2 @@
 # Data Things
-Just trying to learn how to work on data
+Skip insurance check out fifa monte carlo
