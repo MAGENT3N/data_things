@@ -65,8 +65,10 @@ def main():
     # print(results)
     # print(create_groups())
     group_dict = create_groups()
-    qual_teams = simulate_group(group_dict,"group_a")
+    qual_teams,points = simulate_group(group_dict,"group_a")
+    print(qual_teams,points)
     round_of_32()
+    round_of_16()
 
 
 """
@@ -197,7 +199,8 @@ def simulate_group(groups_dictionary , group_key):
     team_list = list(sorted_point_dicts)
     return team_list,points_dict
 """
-    Function for creating playoffs against the winners of the group stage
+    Function for creating playoffs against the winners of the group stage and
+    returning the teams which pass two the round of 16
 """
 def round_of_32():
     group = create_groups()
@@ -205,20 +208,89 @@ def round_of_32():
     # Dictionary containing the 12 teams who were third in their group
     
     bottom_fraggers = {}
-    
+    # Getting the top 2 teams and creating a dictionary for remaining teams
+    # Along with their points
     for key in group:
         elem,points = simulate_group(group, key)
         top_24.append(elem[0])
         top_24.append(elem[1])
         bottom_fraggers[elem[2]] = points[elem[2]]
+    # Sorting the dictionary on the basis of their points
     sorted_bottom_fraggers = dict(sorted(bottom_fraggers.items(),key = lambda item:item[1],reverse = True))
     sorted_list = list(sorted_bottom_fraggers)
+    
+    # Getting the top 8 teams of the 12 teams who were not in the top 24
     top_8 = []
     for i in range(8):
         element = sorted_list[i]
         top_8.append(element)
-    print(top_8)
-        
+    teams_in_round_32 = top_24 + top_8
+    # Shuffling the teams in random order
+    random.shuffle(teams_in_round_32)
+    print(teams_in_round_32)
+    # Creating a tuple for teams that will play against each other
+    #... one takes the slices at odd indices other at even and then we zip
+    paired_list = list(zip(teams_in_round_32[0::2],teams_in_round_32[1::2]))
+    print(paired_list)
+    # playing the teams against each other if the match results in a draw
+    #... we are choosing one of the two teams randomly
+    round_of_16_teams = []
+    for pairs in paired_list:
+        team_a,team_b = pairs
+        result = simulate_match(team_a, team_b)
+        if result == "draw":
+            rand_num = random.randint(1,2)
+            if rand_num == 1:
+                result = team_a
+            else :
+                result = team_b
+        round_of_16_teams.append(result)
+    print(round_of_16_teams)
+    return round_of_16_teams
+"""
+    Function for simulating the round of 16
+"""
+def round_of_16():
+    # Getting the teams playing the round of 16
+    teams_in_16 = round_of_32()
+    quarter_final_teams = knockout(teams_in_16)
+    # Shuffling the teams
+    # random.shuffle(teams_in_16)
+    # # Making pairs
+    # paired_list = list(zip(teams_in_16[0::2],teams_in_16[1::2]))
+    # quarter_final_teams = []
+    # for pairs in paired_list:
+    #     team_a , team_b = pairs
+    #     result = simulate_match(team_a, team_b)
+    #     if result == "draw":
+    #         rand_num = random.randint(1,2)
+    #         if rand_num == 1 :
+    #             result = team_a
+    #         else:
+    #             result = team_b
+    #     quarter_final_teams.append(result)
+    # print(quarter_final_teams)
+    return quarter_final_teams
+def knockout(list_of_teams):
+    random.shuffle(list_of_teams)
+    paired_list = list(zip(list_of_teams[0::2],list_of_teams[1::2]))
+    next_round_teams = []
+    for pairs in paired_list:
+        team_a,team_b = pairs
+        result = simulate_match(team_a, team_b)
+        if result == "draw":
+            rand_num = random.randint(1,2)
+            if rand_num == 1:
+                result = team_a
+            else :
+                result = team_b
+        next_round_teams.append(result)
+    return next_round_teams
+
+# def round_of_16():
+#     teams_playing = team
+
+       
         
 
             
