@@ -54,6 +54,16 @@ elo_ratings_dict = {
         "uruguay"  :{"elo": 1892 , "one_year_change" : -29},
         "uzbekistan"  :{"elo": 1727 , "one_year_change" : 30},
         }
+
+"""
+    Main description : The program uses the global dictionary which contains
+    the data on which are simulation runs.
+    
+    Basic Flow of the program:
+    1)Create a dictionary containing the groups
+    2)
+    
+"""
 def main():
     
     # one_year_elo = accessing_one_year_change()
@@ -66,9 +76,11 @@ def main():
     # print(create_groups())
     group_dict = create_groups()
     qual_teams,points = simulate_group(group_dict,"group_a")
-    print(qual_teams,points)
-    round_of_32()
-    round_of_16()
+    print(round_of_32())
+    print(round_of_16())
+    print(quarter_finals())
+    print(semi_finals())
+    print(finals())
 
 
 """
@@ -83,8 +95,7 @@ def main():
     
     Returns - The name of the team that wins or if a draw then draw
 """
-"""
-"""
+
 def simulate_match(team_a , team_b):
 
 
@@ -225,28 +236,8 @@ def round_of_32():
         element = sorted_list[i]
         top_8.append(element)
     teams_in_round_32 = top_24 + top_8
-    # Shuffling the teams in random order
-    random.shuffle(teams_in_round_32)
-    print(teams_in_round_32)
-    # Creating a tuple for teams that will play against each other
-    #... one takes the slices at odd indices other at even and then we zip
-    paired_list = list(zip(teams_in_round_32[0::2],teams_in_round_32[1::2]))
-    print(paired_list)
-    # playing the teams against each other if the match results in a draw
-    #... we are choosing one of the two teams randomly
-    round_of_16_teams = []
-    for pairs in paired_list:
-        team_a,team_b = pairs
-        result = simulate_match(team_a, team_b)
-        if result == "draw":
-            rand_num = random.randint(1,2)
-            if rand_num == 1:
-                result = team_a
-            else :
-                result = team_b
-        round_of_16_teams.append(result)
-    print(round_of_16_teams)
-    return round_of_16_teams
+    teams_in_16 = knockout(teams_in_round_32)
+    return teams_in_16
 """
     Function for simulating the round of 16
 """
@@ -254,26 +245,50 @@ def round_of_16():
     # Getting the teams playing the round of 16
     teams_in_16 = round_of_32()
     quarter_final_teams = knockout(teams_in_16)
-    # Shuffling the teams
-    # random.shuffle(teams_in_16)
-    # # Making pairs
-    # paired_list = list(zip(teams_in_16[0::2],teams_in_16[1::2]))
-    # quarter_final_teams = []
-    # for pairs in paired_list:
-    #     team_a , team_b = pairs
-    #     result = simulate_match(team_a, team_b)
-    #     if result == "draw":
-    #         rand_num = random.randint(1,2)
-    #         if rand_num == 1 :
-    #             result = team_a
-    #         else:
-    #             result = team_b
-    #     quarter_final_teams.append(result)
-    # print(quarter_final_teams)
     return quarter_final_teams
+
+"""
+    Function for simulating the quarter finals
+"""
+def quarter_finals():
+    teams_in_quarters = round_of_16()
+    semi_finals_teams = knockout(teams_in_quarters)
+    return semi_finals_teams
+"""
+    Function for simulating the semi-finals
+"""
+def semi_finals():
+    teams_in_semi = quarter_finals()
+    teams_in_finals = knockout(teams_in_semi)
+    return teams_in_finals
+"""
+    Function for simulating the finals
+"""
+def finals():
+    final_teams = semi_finals()
+    winner = knockout(final_teams)
+    return winner
+    
+"""
+    A helper function for simulating Knockouts after getting the teams
+    in the round of 32
+    Description:Algorithm
+    1) Get the teams entering that round
+    2)Shuffle the teams
+    3)Pair the shuffled teams
+    4)Simulate match between the teams
+    4i) If match resulting in a draw choose one team randomly
+    5) Return the resulting teams
+    Parameter : A list of teams entering that round.
+    Returns   : The list of teams that move to  the next round
+"""
 def knockout(list_of_teams):
+    # Shuffling the teams in a random order
     random.shuffle(list_of_teams)
+    # Pairing the list by creating one list of odd indices and other
+    # ...of even indices and zipping them
     paired_list = list(zip(list_of_teams[0::2],list_of_teams[1::2]))
+    # Simulating the matches
     next_round_teams = []
     for pairs in paired_list:
         team_a,team_b = pairs
@@ -287,21 +302,6 @@ def knockout(list_of_teams):
         next_round_teams.append(result)
     return next_round_teams
 
-# def round_of_16():
-#     teams_playing = team
-
-       
-        
-
-            
-    # print(teams)
-    
-                
-        
-    
- 
-    
-    
 
 if __name__=="__main__":
     main()
