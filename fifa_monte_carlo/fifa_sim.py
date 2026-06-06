@@ -5,6 +5,10 @@ import matplotlib.pyplot as plt
 
 # Global variable containing the country,elo , and year change in elo
 # .... as a dictionary data structure
+"""
+  TO DO - Add update elo functionality after every match that is dynamic
+  elo values
+"""
 elo_ratings_dict = {
         "canada" : {"elo" : 1784 ,"one_year_change" : 6},
         "usa"    : {"elo" : 1733 , "one_year_change" : 11},
@@ -61,8 +65,22 @@ elo_ratings_dict = {
     the data on which the  simulations  run.
     
     Basic Flow of the program:
-    1)Create a dictionary containing the groups
-    2)
+    1)Create a dictionary containing the groups from the global data dictionary
+    
+    2)Play the teams in each group against each other so that every team plays
+      each other at leat once using simulate match logic
+      
+    3)Using the results create a list of teams that will go to the round of 32
+    
+    4)Simulate Round of 32 ,16,quarters,semi and then the final
+    
+    5)Create a dictionary in main for keeping count of the number of times a 
+     country wins the world cup for a iteration and divide the count values to 
+     the total number of iterations to get win probability
+     
+    6)Plot the histograms of the top 10 countries with the highest probabilites
+      and their probability of winning after accounting for all iterations
+     
     
 """
 def main():
