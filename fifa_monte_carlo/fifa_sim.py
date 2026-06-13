@@ -50,6 +50,7 @@ def main():
     for key,value in sorted_dict.items():
         print(f"{key}: win probability after {iterations} iterations = {value}")
     plot_data(sorted_dict)
+    
 
 """
     Description- Function for simulating a match between two teams on the basis
