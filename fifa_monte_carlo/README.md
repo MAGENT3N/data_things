@@ -4,7 +4,8 @@ Run a monte carlo simulation of the 2026 fifa world cup based on the ELO ratings
 - Create data structure with elo data and country name
 - Create data structure for all the groups
 - Create a function for simulating a single match between team A and team B
-- Select the individual combinations of teams in a group and simulate the matches and advance the top 2 teams to the next stage(for now ignore the fact a third team will also advance)
+- Select the individual combinations of teams in a group and simulate the matches and advance the top 2 teams to the next stage and ranking the
+  the third team of each group and selecting the top 8 teams out of them for the round of 32
 - Update the elo ratings based on the matches played , now the new elo ratings of the teams are the update elo ratings after playing the matches
 - Repeat this process for the next stages like round of 16 , quarter , semi and finals
 Run this block a thousand times and see the results.
